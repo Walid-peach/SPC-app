@@ -1,8 +1,8 @@
 import streamlit as st
+from scipy import stats
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import datetime 
 
 header = st.container()
 
@@ -48,6 +48,17 @@ with col1:
 with col2:
     if st.button("clear last row"):
         get_data().pop()
+        
+        
+# Test normality of data distribution
+fig = plt.figure()
+ax1 = fig.add_subplot(111) # 111 is equivalent to nrows=1, ncols=1, plot_number=1.
+prob = stats.probplot(np.array(get_data()).astype(np.float), dist=stats.norm, plot=ax1)
+ax1.set_xlabel('')
+ax1.set_title('Probability plot against normal distribution')
+plt.show()
+st.pyplot()
+
 
 #disable this warning by disabling the config option: deprecation.showPyplotGlobalUse
 st.set_option('deprecation.showPyplotGlobalUse', False)
@@ -56,3 +67,4 @@ st.write(np.array(get_data()).astype(np.float))
 plt.hist(np.array(get_data()).astype(np.float))
 plt.show()
 st.pyplot()
+
