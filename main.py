@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 import datetime 
 
 header = st.container()
@@ -48,9 +49,10 @@ with col2:
     if st.button("clear last row"):
         get_data().pop()
 
+#disable this warning by disabling the config option: deprecation.showPyplotGlobalUse
+st.set_option('deprecation.showPyplotGlobalUse', False)
 st.subheader('Number of pickups by hour')
-a=[1,2,1,2,1,2]
-hist_values =np.histogram(np.array(get_data()).astype(np.float),bins=1)
-st.bar_chart(hist_values)
 st.write(np.array(get_data()).astype(np.float))
-
+plt.hist(np.array(get_data()).astype(np.float))
+plt.show()
+st.pyplot()
