@@ -10,14 +10,23 @@ import hydralit_components as hc
 st.set_page_config(layout='wide',page_title='Statistical Process Control application')
 # specify the primary menu definition
 menu_data = [
-        {'icon': "far fa-copy", 'label':"Left End"},
-        {'icon': "far fa-chart-bar", 'label':"Chart"},#no tooltip message
-        {'icon': "far fa-address-book", 'label':"Book"}
+        {'icon': "far fa-copy", 'label':"Insert Excel"},
+        {'icon': "far fa-chart-bar", 'label':"Insert Data manually"},#no tooltip message
+        {'icon': "far fa-address-book", 'label':"About us"}
 ]
 # we can override any part of the primary colors of the menu
 #over_theme = {'txc_inactive': '#FFFFFF','menu_background':'red','txc_active':'yellow','option_active':'blue'}
 over_theme = {'txc_inactive': '#FFFFFF'}
-
+def navigation():
+    menu_id=hc.nav_bar(
+    menu_definition=menu_data,
+    override_theme=over_theme,
+    home_name='Home',
+    hide_streamlit_markers=False, #will show the st hamburger as well as the navbar now!
+    sticky_nav=True, #at the top or not
+    sticky_mode='pinned', #jumpy or not-jumpy, but sticky or pinned
+    )
+    return menu_id
 if st.sidebar.button('click me too'):
   st.info('You clicked at: {}'.format(datetime.datetime.now()))
 
@@ -25,16 +34,15 @@ if st.sidebar.button('click me too'):
 header = st.container()
 
 with header:
+
+    if navigation() == "Home":
+        st.title('Home')
+        st.info('This is the home page.')     
     st.title("Welcome to Statistical Process Control application")
-    hc.nav_bar(
-    menu_definition=menu_data,
-    override_theme=over_theme,
-    home_name='Home',
-    login_name='Logout',
-    hide_streamlit_markers=False, #will show the st hamburger as well as the navbar now!
-    sticky_nav=True, #at the top or not
-    sticky_mode='pinned', #jumpy or not-jumpy, but sticky or pinned
-)
+    
+
+
+
 
 
 # Create a text element and let the reader know the data is loading.
@@ -74,15 +82,14 @@ prob = stats.probplot(np.array(get_data()).astype(np.float), dist=stats.norm, pl
 ax1.set_xlabel('')
 ax1.set_title('Probability plot against normal distribution')
 plt.show()
-st.pyplot(height=800)
+st.pyplot()
 
 
 
 st.subheader('Number of pickups by hour')
 st.write(np.array(get_data()).astype(np.float))
-fig=plt.figure(figsize=(8,8))
 plt.hist(np.array(get_data()).astype(np.float))
 plt.show()
-st.pyplot(fig, )
+st.pyplot()
 
 
