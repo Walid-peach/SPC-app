@@ -10,23 +10,28 @@ import hydralit_components as hc
 st.set_page_config(layout='wide',page_title='Statistical Process Control application')
 # specify the primary menu definition
 menu_data = [
-        {'icon': "far fa-copy", 'label':"Insert Excel"},
-        {'icon': "far fa-chart-bar", 'label':"Insert Data manually"},#no tooltip message
+        {'icon': "far fa-copy", 'label':"Insert Data manually"},
+        {'icon': "far fa-chart-bar", 'label':"Insert Excel"},#no tooltip message
         {'icon': "far fa-address-book", 'label':"About us"}
 ]
 # we can override any part of the primary colors of the menu
 #over_theme = {'txc_inactive': '#FFFFFF','menu_background':'red','txc_active':'yellow','option_active':'blue'}
 over_theme = {'txc_inactive': '#FFFFFF'}
 def navigation():
-    menu_id=hc.nav_bar(
-    menu_definition=menu_data,
-    override_theme=over_theme,
-    home_name='Home',
-    hide_streamlit_markers=False, #will show the st hamburger as well as the navbar now!
-    sticky_nav=True, #at the top or not
-    sticky_mode='pinned', #jumpy or not-jumpy, but sticky or pinned
-    )
+    try:
+        menu_id=hc.nav_bar(
+                            menu_definition=menu_data,
+                            override_theme=over_theme,
+                            home_name='Home',
+                            hide_streamlit_markers=False, #will show the st hamburger as well as the navbar now!
+                            sticky_nav=True, #at the top or not
+                            sticky_mode='pinned', #jumpy or not-jumpy, but sticky or pinned
+                        )
+    except Exception as e:
+        st.error('Please use the main app.')
+        return None
     return menu_id
+
 if st.sidebar.button('click me too'):
   st.info('You clicked at: {}'.format(datetime.datetime.now()))
 
@@ -38,25 +43,28 @@ with header:
     if navigation() == "Home":
         st.title('Home')
         st.info('This is the home page.')     
-    st.title("Welcome to Statistical Process Control application")
+        st.title("Welcome to Statistical Process Control application")
     
-
+    elif navigation()=="Insert Data manually":
+        st.title("Welcome to Statistical Process Control application")
+        st.set_option('deprecation.showPyplotGlobalUse', False)
+        data_load_state = st.text('Enter data please!')
 
 
 
 
 # Create a text element and let the reader know the data is loading.
-data_load_state = st.text('Enter data please!')
+#data_load_state = st.text('Enter data please!')
 # Load 10,000 rows of data into the dataframe.
 #data = load_data(10000)
 # Notify the reader that the data was successfully loaded.
 #data_load_state.text('Loading data...done!')
 
-st.subheader('Raw data')
+#st.subheader('Raw data')
 
 
 #disable this warning by disabling the config option: deprecation.showPyplotGlobalUse
-st.set_option('deprecation.showPyplotGlobalUse', False)
+#st.set_option('deprecation.showPyplotGlobalUse', False)
 
 
 @st.cache(allow_output_mutation=True)
