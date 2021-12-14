@@ -2,37 +2,54 @@ import streamlit as st
 from scipy import stats
 import pandas as pd
 import numpy as np
+import datetime
 import matplotlib.pyplot as plt
+import hydralit_components as hc
+
+
+st.set_page_config(layout='wide',page_title='Statistical Process Control application')
+# specify the primary menu definition
+menu_data = [
+        {'icon': "far fa-copy", 'label':"Left End"},
+        {'icon': "far fa-chart-bar", 'label':"Chart"},#no tooltip message
+        {'icon': "far fa-address-book", 'label':"Book"}
+]
+# we can override any part of the primary colors of the menu
+#over_theme = {'txc_inactive': '#FFFFFF','menu_background':'red','txc_active':'yellow','option_active':'blue'}
+over_theme = {'txc_inactive': '#FFFFFF'}
+
+if st.sidebar.button('click me too'):
+  st.info('You clicked at: {}'.format(datetime.datetime.now()))
+
 
 header = st.container()
 
 with header:
     st.title("Welcome to Statistical Process Control application")
+    hc.nav_bar(
+    menu_definition=menu_data,
+    override_theme=over_theme,
+    home_name='Home',
+    login_name='Logout',
+    hide_streamlit_markers=False, #will show the st hamburger as well as the navbar now!
+    sticky_nav=True, #at the top or not
+    sticky_mode='pinned', #jumpy or not-jumpy, but sticky or pinned
+)
 
-DATE_COLUMN = 'date/time'
-DATA_URL = ('https://s3-us-west-2.amazonaws.com/'
-         'streamlit-demo-data/uber-raw-data-sep14.csv.gz')
-
-def load_data(nrows):
-    data = pd.read_csv(DATA_URL, nrows=nrows)
-    lowercase = lambda x: str(x).lower()
-    data.rename(lowercase, axis='columns', inplace=True)
-    data[DATE_COLUMN] = pd.to_datetime(data[DATE_COLUMN])
-    return data
 
 # Create a text element and let the reader know the data is loading.
-data_load_state = st.text('Loading data...')
+data_load_state = st.text('Enter data please!')
 # Load 10,000 rows of data into the dataframe.
 #data = load_data(10000)
 # Notify the reader that the data was successfully loaded.
 #data_load_state.text('Loading data...done!')
 
 st.subheader('Raw data')
-#st.write(data)
 
-#st.subheader('Number of pickups by hour')
-#hist_values = np.histogram(data[DATE_COLUMN].dt.hour, bins=24, range=(0,24))[0]
-#st.bar_chart(hist_values)
+
+#disable this warning by disabling the config option: deprecation.showPyplotGlobalUse
+st.set_option('deprecation.showPyplotGlobalUse', False)
+
 
 @st.cache(allow_output_mutation=True)
 def get_data():
@@ -57,14 +74,15 @@ prob = stats.probplot(np.array(get_data()).astype(np.float), dist=stats.norm, pl
 ax1.set_xlabel('')
 ax1.set_title('Probability plot against normal distribution')
 plt.show()
-st.pyplot()
+st.pyplot(height=800)
 
 
-#disable this warning by disabling the config option: deprecation.showPyplotGlobalUse
-st.set_option('deprecation.showPyplotGlobalUse', False)
+
 st.subheader('Number of pickups by hour')
 st.write(np.array(get_data()).astype(np.float))
+fig=plt.figure(figsize=(8,8))
 plt.hist(np.array(get_data()).astype(np.float))
 plt.show()
-st.pyplot()
+st.pyplot(fig, )
+
 
