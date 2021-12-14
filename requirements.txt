@@ -1,3 +1,5 @@
 pandas 
 streamlit version 1.2.0
 numpy
+hydralit_components
+scipy
