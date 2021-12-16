@@ -55,15 +55,15 @@ elif menu_id =="Insert Data manually":
     st.set_option('deprecation.showPyplotGlobalUse', False)
     data_load_state = st.text('Enter data please!')
 
-# Create a text element and let the reader know the data is loading.
-#data_load_state = st.text('Enter data please!')
-# Load 10,000 rows of data into the dataframe.
-#data = load_data(10000)
-# Notify the reader that the data was successfully loaded.
-#data_load_state.text('Loading data...done!')
-#st.subheader('Raw data')
-#disable this warning by disabling the config option: deprecation.showPyplotGlobalUse
-#st.set_option('deprecation.showPyplotGlobalUse', False)
+    # Create a text element and let the reader know the data is loading.
+    #data_load_state = st.text('Enter data please!')
+    # Load 10,000 rows of data into the dataframe.
+    #data = load_data(10000)
+    # Notify the reader that the data was successfully loaded.
+    #data_load_state.text('Loading data...done!')
+    #st.subheader('Raw data')
+    #disable this warning by disabling the config option: deprecation.showPyplotGlobalUse
+    #st.set_option('deprecation.showPyplotGlobalUse', False)
     user_id = st.text_input("User ID")
 
     col1, col2 = st.columns(2)
@@ -95,4 +95,13 @@ elif menu_id =="Insert Data manually":
     plt.show()
     st.pyplot()
 
+elif menu_id =="Insert Excel":
 
+
+    uploaded_file = st.file_uploader("Choose a XLSX file", type="xlsx")
+
+    if uploaded_file:
+        df = pd.read_excel(uploaded_file)
+
+        st.dataframe(df)
+        st.table(df)
