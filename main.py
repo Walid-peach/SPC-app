@@ -11,7 +11,7 @@ st.set_page_config(layout='wide',page_title='Statistical Process Control applica
 # specify the primary menu definition
 menu_data = [
         {'icon': "far fa-copy", 'label':"Insert Data manually"},
-        {'icon': "far fa-chart-bar", 'label':"Insert Excel"},#no tooltip message
+        {'icon': "far fa-chart-bar", 'label':"Insert File"},#no tooltip message
         {'icon': "far fa-address-book", 'label':"About us"}
 ]
 # we can override any part of the primary colors of the menu
@@ -95,12 +95,10 @@ elif menu_id =="Insert Data manually":
     plt.show()
     st.pyplot()
 
-elif menu_id =="Insert Excel":
-
-
-    uploaded_file = st.file_uploader("Choose a XLSX file", type="xlsx")
-
-    if uploaded_file:
+elif menu_id =="Insert File":
+    
+    uploaded_file = st.file_uploader("Choose a XLSX file")
+    if uploaded_file is not None:
         df = pd.read_excel(uploaded_file)
 
         st.dataframe(df)
