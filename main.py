@@ -34,6 +34,14 @@ def navigation():
 @st.cache(allow_output_mutation=True)
 def get_data():
     return []
+def test_normality():
+    fig = plt.figure()
+    ax1 = fig.add_subplot(111) # 111 is equivalent to nrows=1, ncols=1, plot_number=1.
+    prob = stats.probplot(np.array(get_data()).astype(np.float), dist=stats.norm, plot=ax1)
+    ax1.set_xlabel('')
+    ax1.set_title('Probability plot against normal distribution')
+    plt.show()
+    st.pyplot()
 
 if st.sidebar.button('click me too'):
   st.info('You clicked at: {}'.format(datetime.datetime.now()))
@@ -55,21 +63,12 @@ elif menu_id =="Insert Data manually":
     st.set_option('deprecation.showPyplotGlobalUse', False)
     data_load_state = st.text('Enter data please!')
 
-    # Create a text element and let the reader know the data is loading.
-    #data_load_state = st.text('Enter data please!')
-    # Load 10,000 rows of data into the dataframe.
-    #data = load_data(10000)
-    # Notify the reader that the data was successfully loaded.
-    #data_load_state.text('Loading data...done!')
-    #st.subheader('Raw data')
-    #disable this warning by disabling the config option: deprecation.showPyplotGlobalUse
-    #st.set_option('deprecation.showPyplotGlobalUse', False)
-    user_id = st.text_input("User ID")
+    data_raw = st.text_input("data raw")
 
     col1, col2 = st.columns(2)
     with col1:
         if st.button("Add row"):
-            get_data().append(user_id)
+            get_data().append(data_raw)
 
     with col2:
         if st.button("clear last row"):
@@ -77,13 +76,9 @@ elif menu_id =="Insert Data manually":
             
             
     # Test normality of data distribution
-    fig = plt.figure()
-    ax1 = fig.add_subplot(111) # 111 is equivalent to nrows=1, ncols=1, plot_number=1.
-    prob = stats.probplot(np.array(get_data()).astype(np.float), dist=stats.norm, plot=ax1)
-    ax1.set_xlabel('')
-    ax1.set_title('Probability plot against normal distribution')
-    plt.show()
-    st.pyplot()
+    
+    if st.button("Test normality"):
+        test_normality()
 
     #---------------------------------------------------
     #Plot the histogram
