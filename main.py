@@ -43,6 +43,13 @@ def test_normality():
     plt.show()
     st.pyplot()
 
+def dessiner_histogramme():
+        st.subheader("l'Histogramme")
+        st.write(np.array(get_data()).astype(np.float))
+        plt.hist(np.array(get_data()).astype(np.float))
+        plt.show()
+        st.pyplot()
+
 if st.sidebar.button('click me too'):
   st.info('You clicked at: {}'.format(datetime.datetime.now()))
 
@@ -83,12 +90,8 @@ elif menu_id =="Insert Data manually":
     #---------------------------------------------------
     #Plot the histogram
     
-
-    st.subheader('Number of pickups by hour')
-    st.write(np.array(get_data()).astype(np.float))
-    plt.hist(np.array(get_data()).astype(np.float))
-    plt.show()
-    st.pyplot()
+    if st.button("Dessiner l'Histogramme"):    
+        dessiner_histogramme()
 
 elif menu_id =="Insert File":
     
@@ -98,3 +101,7 @@ elif menu_id =="Insert File":
 
         st.dataframe(df)
         st.table(df)
+    if st.button("Test normality"):
+        test_normality()
+    if st.button("Dessiner l'Histogramme"):    
+        dessiner_histogramme()
