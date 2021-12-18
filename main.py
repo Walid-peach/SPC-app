@@ -17,6 +17,7 @@ menu_data = [
 # we can override any part of the primary colors of the menu
 #over_theme = {'txc_inactive': '#FFFFFF','menu_background':'red','txc_active':'yellow','option_active':'blue'}
 over_theme = {'txc_inactive': '#FFFFFF'}
+
 def navigation():
     try:
         menu_id=hc.nav_bar(
@@ -31,31 +32,32 @@ def navigation():
         st.error('Please use the main app.')
         return None
     return menu_id
+
 @st.cache(allow_output_mutation=True)
+
 def get_data():
     return []
-def test_normality():
+
+def test_normality(df):
     fig = plt.figure()
     ax1 = fig.add_subplot(111) # 111 is equivalent to nrows=1, ncols=1, plot_number=1.
-    prob = stats.probplot(np.array(get_data()).astype(np.float), dist=stats.norm, plot=ax1)
+    prob = stats.probplot(df, dist=stats.norm, plot=ax1)
     ax1.set_xlabel('')
     ax1.set_title('Probability plot against normal distribution')
     plt.show()
     st.pyplot()
 
-def dessiner_histogramme():
+def dessiner_histogramme(df):
         st.subheader("l'Histogramme")
-        st.write(np.array(get_data()).astype(np.float))
-        plt.hist(np.array(get_data()).astype(np.float))
+        plt.hist(df)
         plt.show()
         st.pyplot()
 
 if st.sidebar.button('click me too'):
   st.info('You clicked at: {}'.format(datetime.datetime.now()))
 
-
-
-#RUN
+#-----------------------------------------------------------------------------------
+#----------------------------------------RUN----------------------------------------
 menu_id=navigation()
 header = st.container()
 with header:
@@ -80,28 +82,29 @@ elif menu_id =="Insert Data manually":
     with col2:
         if st.button("clear last row"):
             get_data().pop()
-            
+    st.dataframe(get_data())        
             
     # Test normality of data distribution
     
     if st.button("Test normality"):
-        test_normality()
+        test_normality(np.array(get_data()).astype(np.float))
 
     #---------------------------------------------------
     #Plot the histogram
     
     if st.button("Dessiner l'Histogramme"):    
-        dessiner_histogramme()
+        dessiner_histogramme(np.array(get_data()).astype(np.float))
 
 elif menu_id =="Insert File":
     
     uploaded_file = st.file_uploader("Choose a XLSX file")
     if uploaded_file is not None:
-        df = pd.read_excel(uploaded_file)
-
+        df = pd.read_excel(uploaded_file, engine= 'openpyxl')
         st.dataframe(df)
-        st.table(df)
+
+    
     if st.button("Test normality"):
-        test_normality()
+        test_normality(df['Diameter'])
+    
     if st.button("Dessiner l'Histogramme"):    
-        dessiner_histogramme()
+        dessiner_histogramme(df['Diameter'])
