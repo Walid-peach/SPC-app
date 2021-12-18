@@ -108,3 +108,6 @@ elif menu_id =="Insert File":
     
     if st.button("Dessiner l'Histogramme"):    
         dessiner_histogramme(df['Diameter'])
+    
+    if st.button("Normal test valeur"):    
+        st.write(stats.normaltest(df['Diameter']))
