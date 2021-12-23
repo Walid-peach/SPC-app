@@ -34,7 +34,6 @@ def navigation():
     return menu_id
 
 @st.cache(allow_output_mutation=True)
-
 def get_data():
     return []
 
@@ -52,6 +51,19 @@ def dessiner_histogramme(df):
         plt.hist(df)
         plt.show()
         st.pyplot()
+
+def Cp(x, usl, lsl):
+    sigma = x.std()
+    Cp = (usl - lsl) / (6*sigma)
+    return Cp
+
+def Cpk(x, usl, lsl):
+    sigma = x.std()
+    m = x.mean()
+    Cpu = (usl - m) / (3*sigma)
+    Cpl = (m - lsl) / (3*sigma)
+    Cpk = np.min([Cpu, Cpl] )
+    return Cpk
 
 if st.sidebar.button('click me too'):
   st.info('You clicked at: {}'.format(datetime.datetime.now()))
@@ -94,6 +106,8 @@ elif menu_id =="Insert Data manually":
     
     if st.button("Dessiner l'Histogramme"):    
         dessiner_histogramme(np.array(get_data()).astype(np.float))
+    if st.button("Normal test valeur"):    
+        st.write(stats.normaltest(np.array(get_data()).astype(np.float)))
 
 elif menu_id =="Insert File":
     
