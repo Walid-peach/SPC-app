@@ -51,12 +51,12 @@ def dessiner_histogramme(df):
         plt.hist(df)
         plt.show()
         st.pyplot()
-
+#Cp function
 def Cp(x, usl, lsl):
     sigma = x.std()
     Cp = (usl - lsl) / (6*sigma)
     return Cp
-
+#Cpk function
 def Cpk(x, usl, lsl):
     sigma = x.std()
     m = x.mean()
