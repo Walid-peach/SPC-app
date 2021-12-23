@@ -125,3 +125,14 @@ elif menu_id =="Insert File":
     
     if st.button("Normal test valeur"):    
         st.write(stats.normaltest(df['Diameter']))
+    col3, col4 = st.columns(2)
+    with col3:
+        if st.button("Calculer Cp"):
+            st.write(Cp(df['Diameter'], 74.05,73.95))
+            
+
+    with col4:
+        if st.button("Calculer Cpk"):
+           st.write(Cpk(df['Diameter'], 74.05,73.95))
+
+    
