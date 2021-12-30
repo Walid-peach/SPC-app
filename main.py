@@ -73,11 +73,16 @@ if st.sidebar.button('click me too'):
 menu_id=navigation()
 header = st.container()
 with header:
-    st.title("Welcome to Statistical Process Control application")
+    st.markdown("<h1 style='text-align: center; color: #ff4d4d  ;'>Bienvenue dans l'application du MSP</h1>", unsafe_allow_html=True)
 
 if menu_id == "Home":
-        st.title('Home')
-        st.info('This is the home page.')     
+        st.title('MAÎTRISE STATISTIQUE DES PROCÉDÉS :')    
+        st.write("<h4>Un mode de gestion qui conduit à se rendre maître des outils de production pour satisfaire les besoins du client, en agissant à temps sur les facteurs techniques et humains responsables de la qualité.</h4>", unsafe_allow_html=True)
+        st.write("<h3>Les avantages de la MSP:</h3>", unsafe_allow_html=True)
+        st.write("<ul><li><h4>Anticiper les problèmes</h4></li><li><h4>Améliorer la productivité</h4></li><li><h4>Eviter le sous ou le sur contrôle, uniquement réagir quand il le faut</h4></li></ul>", unsafe_allow_html=True)
+        st.write("<h3>La « loi normale » ou distribution gaussienne:</h3>", unsafe_allow_html=True) 
+        st.write("<h4>C'est un des fondements de la MSP. La plupart des outils qui seront mis en place sont basés sur des propriétés de la loi normale. Il est donc indispensable d'en comprendre les propriétés fondamentales.</h4>", unsafe_allow_html=True) 
+        
         
     
 elif menu_id =="Insert Data manually":
