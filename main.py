@@ -138,6 +138,85 @@ class XS_ControlChart:
         plt.show()
         st.pyplot()
 
+class p_ControlChart:
+    def fit(self,D,n):
+        self.D = D
+        self.n = n 
+        self.p = np.zeros(len(self.D)) 
+        for i in range(len(D)):
+            self.p[i] = D[i] / n
+    
+    def ControlChart(self):
+        m      = len(self.p)
+        p_mean = self.p.sum() / m
+        
+        ucl = p_mean + 3*np.sqrt((p_mean*(1-p_mean))/(self.n))
+        cl  = p_mean
+        lcl = p_mean - 3*np.sqrt((p_mean*(1-p_mean))/(self.n)) 
+        
+        plt.figure(figsize=(15,5))
+        plt.plot(self.p,marker="o",color="k",label="$p_i$")
+        plt.plot([ucl]*(len(self.D)),label="UCL",color="r")
+        plt.plot([cl]*(len(self.D)),label="CL",color="k",alpha=0.4)
+        plt.plot([lcl]*(len(self.D)),label="LCL",color="r")
+        plt.legend(loc="best")
+        plt.xticks(np.arange(len(self.D)))
+        plt.title("p Control Chart")
+        plt.show()
+        st.pyplot()
+        
+        plt.figure(figsize=(15,5))
+        plt.subplot(1,2,1)
+        plt.boxplot(self.D,vert=False)
+        plt.title("Boxplot of Data")
+        plt.ylabel("Data")
+        plt.subplot(1,2,2)
+        plt.hist(self.D,bins=int(len(self.D)/3),density=True,color="blue")
+        plt.ylabel("Frequency")
+        plt.title("Histogram of Data")
+        plt.show()
+        st.pyplot()
+        
+
+
+class u_ControlChart:
+    
+    def fit(self,c,n):
+        
+        self.c      = c
+        self.n      = n
+        self.u_mean = sum(self.c) / sum(self.n)
+        self.value  = np.array(c) /  np.array(n)
+        
+    def ControlChart(self):
+        
+        ucl = self.u_mean + 3 * np.sqrt(self.u_mean/np.mean(self.n))
+        cl  = self.u_mean
+        lcl = self.u_mean - 3 * np.sqrt(self.u_mean/np.mean(self.n))     
+        
+        plt.figure(figsize=(15,5))
+        plt.plot(self.value,marker="o",color="k",label="$C_i$")
+        plt.plot([ucl]*len(self.n),color="r",label="UCL{}".format(ucl.round(2)))
+        plt.plot([cl]*len(self.n),color="k",alpha=0.4,label="CL{}".format(cl.round(2)))
+        plt.plot([lcl]*len(self.n),color="r",label="LCL{}".format(lcl.round(2)))
+        plt.xticks(np.arange(len(self.c)))
+        plt.legend(loc="best")
+        plt.title("u - Control Chart")
+        plt.show()
+        st.pyplot()
+        
+        plt.figure(figsize=(15,5))
+        plt.subplot(1,2,1)
+        plt.boxplot(self.c,vert=False)
+        plt.title("Boxplot of Data")
+        plt.ylabel("Data")
+        plt.subplot(1,2,2)
+        plt.hist(self.c,bins=int(len(self.c)/3),density=True,color="blue")
+        plt.ylabel("Frequency")
+        plt.title("Histogram of Data")
+        plt.show()
+        st.pyplot()
+
 plt.style.use('seaborn-colorblind')
 
 st.set_page_config(layout='wide',page_title='Statistical Process Control application')
@@ -483,10 +562,20 @@ elif menu_id =="Inserer un fichier":
 
 
     if st.button("Generer les cartes de controles "):
+        st.markdown("<h3 style='text-align: center; color: #ff4d4d  ;'>Carte de Controle X-R</h3>", unsafe_allow_html=True)
         chart = XR_ControlChart()
         chart.fit(data)
         chart.ControlChart(A2 = 0.577,D3 = 0 ,D4 = 2.115)
+        st.markdown("<h3 style='text-align: center; color: #ff4d4d  ;'>Carte de Controle X-S</h3>", unsafe_allow_html=True)
         chart = XS_ControlChart()
         chart.fit(data)
         chart.ControlChart(A3 = 1.427 ,B3 = 0 ,B4 = 2.089)
+        st.markdown("<h3 style='text-align: center; color: #ff4d4d  ;'>Carte de Controle p</h3>", unsafe_allow_html=True)
+        chart = p_ControlChart()
+        chart.fit(D=data6,n=50)
+        chart.ControlChart()
+        st.markdown("<h3 style='text-align: center; color: #ff4d4d  ;'>Carte de Controle u</h3>", unsafe_allow_html=True)
+        chart = u_ControlChart()
+        chart.fit(c,n)
+        chart.ControlChart()
 
