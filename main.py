@@ -57,6 +57,19 @@ def Cp(x, usl, lsl):
     sigma = x.std()
     Cp = (usl - lsl) / (6*sigma)
     return Cp
+#Cm function
+def Cm(usl, lsl,sigma_estime):
+    Cm = (float(usl) - float(lsl)) / (6*float(sigma_estime))
+    return Cm
+#Cmk function
+def Cmk(usl, lsl,sigma_estime,moy):
+    Cmu = (float(usl) - float(moy)) / (3*float(sigma_estime))
+    Cml = (float(moy) - float(lsl)) / (3*float(sigma_estime))
+    Cmk = np.min([Cmu, Cml] )
+    return Cmk
+
+    
+
 #Cpk function
 def Cpk(x, usl, lsl):
     sigma = x.std()
@@ -121,12 +134,21 @@ elif menu_id =="Inserer les données manuellement":
         st.write(stats.normaltest(np.array(get_data()).astype(np.float)))
 
 elif menu_id =="Inserer un fichier":
-    
     uploaded_file = st.file_uploader("Importer un fichier Excel")
     if uploaded_file is not None:
         df = pd.read_excel(uploaded_file, engine= 'openpyxl')
         st.dataframe(df)
-
+    coll4,coll5,coll6,coll7,coll8 =st.columns(5)
+    with coll4:
+            Ts=st.text_input("la valeur superieure du tolérance Ts")
+    with coll5:
+            Ti=st.text_input("la valeur inferieure du tolérance Ti")
+    with coll6:
+            sigma=st.text_input("la valeur écart-type estimé")
+    with coll7:
+            cible=st.text_input("la valeur cible")
+    with coll8:
+            moy=st.text_input("la valeur moyenne")   
     
     if st.button("Tester la normalité"):
         test_normality(df['Diameter'])
@@ -154,14 +176,51 @@ elif menu_id =="Inserer un fichier":
             cpk = Cpk(df['Diameter'], 74.05,73.95)
             st.write("Cp = "+str(cp))
             st.write("Cpk = "+str(cpk))
-        with col4:
-            if cp > 1.33 and cpk > 1.33:
-                st.write("<h3 style='color:  #ff4d4d;'>D'où le procédé est capable</h3>", unsafe_allow_html=True)
-            else :
-                st.write("<h3 style='color:  #ff4d4d;'>D'où le procédé n'est pas capable </h3>", unsafe_allow_html=True)
-        with col5:
             Rr=round(cpk/cp*100,2)
             st.write("le Rendement de reglage egale  "+str(Rr)+"%")
+        with col4:
+            st.write("<h3>Interpretation :</h3>", unsafe_allow_html=True)
+            if cp > 1.33 and cpk > 1.33:
+                st.write("<h3 style='color:  #ff4d4d;'>D'où le procédé est capable et centré</h3>", unsafe_allow_html=True)
+            elif cp > 1.33 and cpk < 1.33:
+                st.write("<h3 style='color:  #ff4d4d;'>D'où le procédé est capable et n'est pas centré</h3>", unsafe_allow_html=True)
+            else :
+                st.write("<h3 style='color:  #ff4d4d;'>D'où le procédé n'est pas capable </h3>", unsafe_allow_html=True)
+                
+                
     
-            
-            
+    if st.button("Calculer Cm et Cmk"):
+        col3, col4,col5 = st.columns(3)
+        with col3:
+            cm=Cm(Ts,Ti,sigma_estime=sigma)
+            cmk = Cmk(Ts,Ti,sigma_estime=sigma,moy=moy)
+            st.write("Cm = "+str(cm))
+            st.write("Cmk = "+str(cmk))
+            #Rr=round(cpk/cp*100,2)
+            #st.write("le Rendement de reglage egale  "+str(Rr)+"%")
+        with col4:
+            st.write("<h3>Interpretation :</h3>", unsafe_allow_html=True)
+            if cm > 2.4 and cmk > 2.4:
+                st.write("<h3 style='color:  #ff4d4d;'>D'où la machine est capable et centré</h3>", unsafe_allow_html=True)
+            elif cm > 2.4 and cmk<2.4:
+                st.write("<h3 style='color:  #ff4d4d;'>D'où la machine est capable et n'est pas centrée</h3>", unsafe_allow_html=True)
+            else :
+                st.write("<h3 style='color:  #ff4d4d;'>D'où la machine n'est pas capable </h3>", unsafe_allow_html=True)
+    
+    if st.button("Calculer Pp et Ppk "):
+        col3, col4,col5 = st.columns(3)
+        with col3:
+            cm=Cm(Ts,Ti,sigma_estime=sigma)
+            cmk = Cmk(Ts,Ti,sigma_estime=sigma,moy=moy)
+            st.write("Cm = "+str(cm))
+            st.write("Cmk = "+str(cmk))
+            #Rr=round(cpk/cp*100,2)
+            #st.write("le Rendement de reglage egale  "+str(Rr)+"%")
+        with col4:
+            st.write("<h3>Interpretation :</h3>", unsafe_allow_html=True)
+            if cm > 2.4 and cmk > 2.4:
+                st.write("<h3 style='color:  #ff4d4d;'>D'où la machine est capable et centré</h3>", unsafe_allow_html=True)
+            elif cm > 2.4 and cmk<2.4:
+                st.write("<h3 style='color:  #ff4d4d;'>D'où la machine est capable et n'est pas centrée</h3>", unsafe_allow_html=True)
+            else :
+                st.write("<h3 style='color:  #ff4d4d;'>D'où la machine n'est pas capable </h3>", unsafe_allow_html=True)
