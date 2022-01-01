@@ -11,8 +11,8 @@ from PIL import Image
 st.set_page_config(layout='wide',page_title='Statistical Process Control application')
 # specify the primary menu definition
 menu_data = [
-        {'icon': "far fa-copy", 'label':"Insert Data manually"},
-        {'icon': "far fa-chart-bar", 'label':"Insert File"},#no tooltip message
+        {'icon': "far fa-copy", 'label':"Inserer les données manuellement"},
+        {'icon': "far fa-chart-bar", 'label':"Inserer un fichier"},#no tooltip message
         {'icon': "far fa-address-book", 'label':"About us"}
 ]
 # we can override any part of the primary colors of the menu
@@ -74,7 +74,7 @@ if st.sidebar.button('click me too'):
 menu_id=navigation()
 header = st.container()
 with header:
-    st.markdown("<h1 style='text-align: center; color: #ff4d4d  ;'>Bienvenue dans l'application du MSP</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center; color: #ff4d4d  ;'>Bienvenue sur l'application du MSP</h1>", unsafe_allow_html=True)
 
 if menu_id == "Home":
     st.title('MAÎTRISE STATISTIQUE DES PROCÉDÉS :')    
@@ -90,25 +90,26 @@ if menu_id == "Home":
         st.image(image, caption='Loi Normale')    
         
     
-elif menu_id =="Insert Data manually":
+elif menu_id =="Inserer les données manuellement":
     st.set_option('deprecation.showPyplotGlobalUse', False)
-    data_load_state = st.text('Enter data please!')
+    
 
-    data_raw = st.text_input("data raw")
+    data_raw = st.text_input("Entrer les données Ici!")
 
     col1, col2 = st.columns(2)
     with col1:
-        if st.button("Add row"):
+        if st.button("Ajouter une ligne"):
             get_data().append(data_raw)
 
     with col2:
-        if st.button("clear last row"):
+        if st.button("effacer la dernière ligne"):
             get_data().pop()
+    data_load_state = st.text('Les données inserées')
     st.dataframe(get_data())        
             
     # Test normality of data distribution
     
-    if st.button("Test normality"):
+    if st.button("Tester la normalité"):
         test_normality(np.array(get_data()).astype(np.float))
 
     #---------------------------------------------------
@@ -119,15 +120,15 @@ elif menu_id =="Insert Data manually":
     if st.button("Normal test valeur"):    
         st.write(stats.normaltest(np.array(get_data()).astype(np.float)))
 
-elif menu_id =="Insert File":
+elif menu_id =="Inserer un fichier":
     
-    uploaded_file = st.file_uploader("Choose a XLSX file")
+    uploaded_file = st.file_uploader("Importer un fichier Excel")
     if uploaded_file is not None:
         df = pd.read_excel(uploaded_file, engine= 'openpyxl')
         st.dataframe(df)
 
     
-    if st.button("Test normality"):
+    if st.button("Tester la normalité"):
         test_normality(df['Diameter'])
     
     if st.button("Dessiner l'Histogramme"):    
@@ -135,14 +136,24 @@ elif menu_id =="Insert File":
     
     if st.button("Normal test valeur"):    
         st.write(stats.normaltest(df['Diameter']))
-    col3, col4 = st.columns(2)
-    with col3:
-        if st.button("Calculer Cp"):
-            st.write(Cp(df['Diameter'], 74.05,73.95))
+    
+    
+    if st.button("Calculer Cp et Cpk"):
+        col3, col4,col5 = st.columns(3)
+        with col3:
+            cp=Cp(df['Diameter'], 74.05,73.95)
+            cpk = Cpk(df['Diameter'], 74.05,73.95)
+            st.write("Cp = "+str(cp))
+            st.write("Cpk = "+str(cpk))
+        with col4:
+            if cp > 1.33 and cpk > 1.33:
+                st.write("<h3 style='color:  #ff4d4d;'>D'où le procédé est capable</h3>", unsafe_allow_html=True)
+            else :
+                st.write("<h3 style='color:  #ff4d4d;'>D'où le procédé n'est pas capable</h3>", unsafe_allow_html=True)
+            
+            
+                
             
 
-    with col4:
-        if st.button("Calculer Cpk"):
-           st.write(Cpk(df['Diameter'], 74.05,73.95))
 
     
