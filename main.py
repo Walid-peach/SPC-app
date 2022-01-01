@@ -134,8 +134,17 @@ elif menu_id =="Inserer un fichier":
     if st.button("Dessiner l'Histogramme"):    
         dessiner_histogramme(df['Diameter'])
     
-    if st.button("Normal test valeur"):    
-        st.write(stats.normaltest(df['Diameter']))
+    if st.button("Normal test valeur Khi 2"):    
+        sta, pval = stats.normaltest(df['Diameter'])
+        coll1,coll2,coll3 = st.columns(3)
+        with coll1:
+            st.write("p-value = " +str(pval))
+        with coll2 :
+            if pval > 0.05 :
+                st.write("<h3 style='color:  #ff4d4d;'>P-value > 0.05 d'où il suit la loi normale</h3>", unsafe_allow_html=True)
+            else :
+                st.write("<h3 style='color:  #ff4d4d;'>P-value < 0.05 d'où il suit pas la loi normale </h3>", unsafe_allow_html=True)
+        
     
     
     if st.button("Calculer Cp et Cpk"):
@@ -149,11 +158,10 @@ elif menu_id =="Inserer un fichier":
             if cp > 1.33 and cpk > 1.33:
                 st.write("<h3 style='color:  #ff4d4d;'>D'où le procédé est capable</h3>", unsafe_allow_html=True)
             else :
-                st.write("<h3 style='color:  #ff4d4d;'>D'où le procédé n'est pas capable</h3>", unsafe_allow_html=True)
-            
-            
-                
-            
-
-
+                st.write("<h3 style='color:  #ff4d4d;'>D'où le procédé n'est pas capable </h3>", unsafe_allow_html=True)
+        with col5:
+            Rr=round(cpk/cp*100,2)
+            st.write("le Rendement de reglage egale  "+str(Rr)+"%")
     
+            
+            
